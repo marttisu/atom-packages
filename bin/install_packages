@@ -29,9 +29,11 @@ def main(package_list_fn):
         to_be_installed = set(map(lambda x: x.strip().lower(), f.readlines()))
     installed_packages = get_installed_packages()
     to_be_installed = list(to_be_installed.difference(installed_packages))
+    to_be_installed.sort()
     if len(to_be_installed) > 0:
         with open('etc/package_lists/new.txt', 'w') as f:
-            f.writelines(to_be_installed)
+            for line in to_be_installed:
+                f.write(line + '\n')
         print('installing:\n{}'.format(yaml.dump(to_be_installed,
                                                  default_flow_style=False)))
         subprocess.run(
