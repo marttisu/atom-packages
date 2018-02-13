@@ -1,3 +1,13 @@
 autocomplete-python
+autocomplete-r
 hydrogen
+language-julia
+language-knitr
+language-latex
+language-r
+latex
 linter-flake8
+linter-lintr
+python-indent
+python-tools
+tablr

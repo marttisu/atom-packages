@@ -8,10 +8,15 @@ git-plus
 git-time-machine
 highlight-selected
 intentions
+language-docker
 linter
 linter-ui-default
+markdown-pdf
+markdown-preview-plus
 merge-conflicts
 minimap
+minimap-find-and-replace
+minimap-git-diff
 minimap-highlight-selected
 pigments
 project-manager
