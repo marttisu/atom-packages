@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+"""Install Atom packages from requirements, ignoring already installed ones."""
+
+import subprocess
+import sys
+import yaml
+
+
+def get_installed_packages():
+    """Return list of installed Atom package names."""
+    # get package list
+    installed_packages = subprocess.run(
+        ["apm", "ls", "-b"], stdout=subprocess.PIPE)
+    # parse lines
+    installed_packages = list(installed_packages.stdout.decode().lower().
+                              split('\n'))
+    # remove empty lines
+    installed_packages = list(filter(lambda x: x != '', installed_packages))
+    # remove version
+    installed_packages = set(map(lambda x: x.split('@')[0],
+                                 installed_packages))
+    return installed_packages
+
+
+def main(package_list_fn):
+    """Read package list file, look for new packages, and install them."""
+    # open package file
+    with open('etc/package_lists/{}'.format(package_list_fn)) as f:
+        to_be_installed = set(map(lambda x: x.strip().lower(), f.readlines()))
+    installed_packages = get_installed_packages()
+    to_be_installed = list(to_be_installed.difference(installed_packages))
+    if len(to_be_installed) > 0:
+        with open('etc/package_lists/new.txt', 'w') as f:
+            f.writelines(to_be_installed)
+        print('installing:\n{}'.format(yaml.dump(to_be_installed,
+                                                 default_flow_style=False)))
+        subprocess.run(
+            ["apm", "install", "--packages-file", "etc/package_lists/new.txt"])
+    else:
+        print('nothing to install')
+    print('done')
+
+
+if __name__ == '__main__':
+    main(sys.argv[1])
